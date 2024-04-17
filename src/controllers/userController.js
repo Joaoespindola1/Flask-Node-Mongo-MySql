@@ -1,55 +1,48 @@
 const User = require('../models/User');
+const repository = require('../repositories/SelecaoRepository')
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = async (req,res) => {
     try {
-        const users = await User.find();
-        res.status(200).json(users);
+        const result = await repository.find();
+        res.status(200).json(result)
     } catch (error) {
         res.status(400).json({message: error.message})
     }
-};
-
-//create user
+} 
 
 exports.createUser = async (req,res) => {
     try {
-        const newUser = new User({
+        const newUser = {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
-        })
-        
-        await newUser.save()
-        res.status(200).json(newUser)
+        };
+        const result = await repository.createUser(newUser)
+        res.status(200).json(result)
     } catch (error) {
         res.status(400).json({message: error.message})
     }
-};
-
-//update user
+}
 
 exports.updateUser = async (req,res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, {
+        const user =  {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
-        }, {
-            new: true
-        })
-        res.status(200).json(user)
-    } catch {
+        }
+        result = await repository.updateUser(req.params.id, user)
+        res.status(200).json(result)
+    } catch(error) {
         res.status(400).json({message: error.message})
     }
 };
 
-//delete user
-
 exports.deleteUser = async (req,res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id)
+        const user = await repository.deleteUser(req.params.id)
         res.status(200).json(user) 
-    }catch {
+    }catch (error) {
         res.status(400).json({message: error.message})
     }
 };
