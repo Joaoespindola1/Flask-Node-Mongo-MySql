@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-exports.find = () => {
+exports.findAll = () => {
     return User.find();
 };
 
@@ -18,3 +18,7 @@ exports.updateUser = (id,userData) => {
 exports.deleteUser = (id) => {
     return User.findByIdAndDelete(id)
 };
+
+exports.findUser = (username) => {
+    return User.findOne({name: username})
+}
