@@ -6,8 +6,8 @@ import requests
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='12345678',
-    database='aula_13_10'
+    password='2114',
+    database='trab'
 )
 
 app = Flask(__name__)
@@ -21,7 +21,6 @@ def index():
 def login():
     return render_template('login.html')
 
-
 @app.route('/login', methods=['POST'])
 def logar():
     url = 'http://localhost:3000/login'
@@ -33,31 +32,65 @@ def logar():
             'password': senha}
     
     response = requests.post(url, json=data)
+    response_json = response.json()
+    mensagem = response_json.get('mensagem', 'Mensagem não encontrada')
 
-    return jsonify(response.json())
+    return render_template('mensagem.html', mensagem=mensagem)
 
 
 @app.route('/aluno')
 def funcionario():
     return render_template('aluno.html')
 
+@app.route('/cadastro')
+def cadastro():
+    return render_template('cadastrar.html')
 
-@app.route('/aluno/cadastro', methods=['POST'])
+@app.route('/cadastro', methods=['POST'])
 def add_funcionario():
     primeiro_nome = request.form['primeiro_nome']
     sobrenome = request.form['sobrenome']
     curso = request.form['curso']
-    data_matricula = request.form['data_matricula']
     tel = request.form['tel']
-    cursor.execute(f"INSERT INTO alunos (primeiro_nome, sobrenome, curso, data_matricula, tel) VALUES ('{primeiro_nome}', '{sobrenome}', '{curso}', '{data_matricula}', {tel})")
+    cursor.execute(f"INSERT INTO alunos (primeiro_nome, sobrenome, curso, tel) VALUES ('{primeiro_nome}', '{sobrenome}', '{curso}', {tel})")
     mydb.commit()
-    return '<h1>Adicionado com Sucesso</h1>'
+    mensagem = 'ALUNO CADASTRADO COM SUCESSO'
+    return render_template('mensagem.html', mensagem=mensagem)
 
-@app.route('/aluno/list', methods=['POST'])
+@app.route('/verAlunos')
 def read_funcionario():
     cursor.execute('SELECT * FROM alunos')
-    funcionarios = cursor.fetchall()
-    return f'<h1>Alunos: {funcionarios} </h1>'
+    alunos = cursor.fetchall()
+    return render_template('verAlunos.html', alunos=alunos)
+
+@app.route('/atualizar')
+def atualizar():
+    return render_template('atualizar.html')
+
+@app.route('/atualizar', methods=['POST'])
+def editar_aluno():
+    matricula = request.form['matricula']
+    primeiro_nome = request.form['primeiro_nome']
+    sobrenome = request.form['sobrenome']
+    curso = request.form['curso']
+    tel = request.form['tel']
+    cursor.execute(f"UPDATE alunos SET primeiro_nome='{primeiro_nome}', sobrenome='{sobrenome}', curso='{curso}', tel={tel} WHERE matricula={matricula}")
+    mydb.commit()
+    mensagem = 'ALUNO ATUALIZADO COM SUCESSO'
+    return render_template('mensagem.html', mensagem=mensagem)
+
+@app.route('/deletar')
+def deletar():
+    return render_template('deletar.html')
+
+@app.route('/deletar', methods=['POST'])
+def deletar_aluno():
+    matricula = request.form['matricula']
+    cursor.execute(f"DELETE FROM alunos WHERE matricula={matricula}")
+    mydb.commit()
+    mensagem = 'ALUNO DELETADO COM SUCESSO'
+    return render_template('mensagem.html', mensagem=mensagem)
+  
 
 
 if __name__ == '__main__':

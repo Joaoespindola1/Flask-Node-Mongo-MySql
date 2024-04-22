@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <title>Atualizar</title>
+</head>
+<body>
+    <div class="container">
+        <form action="/atualizar" method="post">
+            <label for="matricula">Matricula </label>
+            <input type="number" name="matricula">
+
+            <label for="primeiro_nome">Primeiro Nome </label>
+            <input type="text" name="primeiro_nome">
+
+            <label for="sobrenome">Sobrenome </label>
+            <input type="text" name="sobrenome">
+
+            <label for="curso">Curso </label>
+            <input type="text" name="curso">
+
+            <label for="tel">Telefone para contato </label>
+            <input type="number" name="tel">
+
+            <input type="submit" value="Atualizar">
+        </form>
+        <a href="/aluno"><button>Voltar</button></a>
+    </div>
+</body>
+</html>
